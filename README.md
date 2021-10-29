@@ -1,5 +1,33 @@
 # MiniRTS-Tutorial
 
-The tutorial series can be found at [https://cxyda.github.io/](https://cxyda.github.io/)
+There is a blogpost about this project, which can be found at [https://cxyda.github.io/](https://cxyda.github.io/MiniRTS-introduction/)
 
-### TODO: add introduction
+This project is about how to implement common game systems used in RTS games. I will also implement multiplayer support. The network architecture will be a lockstep simulation, which is quite common for games in the RTS genre.
+
+I’m going to focus on a good architecture which should allow you to learn from it and extend it to a big project without suffering from a fast but hacky implementation. This of course comes with a drawback. Some implementations might look cumbersome at first or even like overkill for such a small project, but the goal of this series is not to get basic systems working but to create a solid foundation for any RTS project. I assume you have at least basic knowledge about Unity, so this series will not explain you how to do basic thing in Unity. If you are stuck on some steps, I’m sure google can help you out. Otherwise, feel free to drop me some lines.
+
+There won’t be any fancy graphics, so don’t be disappointed that it looks bad at the end. I’ll also keep in mind that you might want to replace my coder artwork with your own to start the next big RTS hit.
+
+This project will use Extenject (formerly know as Zenject) for Dependency Injection.
+
+
+### Content of this series (might change on the go)
+
+- [x] v0.0 [Basic project setup](https://github.com/Cxyda/MiniRTS-Tutorial/tree/0.1)
+- [x] v0.1 [Selection and Input handling](https://github.com/Cxyda/MiniRTS-Tutorial/tree/0.2) 
+- [ ] v0.2 Building Placement and Factories
+- [ ] v0.3 UI and Asset Management
+- [ ] v0.4 Units and Resource Gathering
+- [ ] v0.5 Camera Controls
+- [ ] v0.6 Battle
+- [ ] v0.7 Fog od War
+- [ ] v0.8 Lockstep Simulation
+- [ ] v0.9 Networking
+- [ ] v0.10 TechTrees
+
+
+### Technology used
+
+1. Unity3D 2021.1.15f1
+2. Extenject (Zenject) framework
+3. Photon Engine
