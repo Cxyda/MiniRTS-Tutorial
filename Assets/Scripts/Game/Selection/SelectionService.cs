@@ -26,7 +26,7 @@ namespace Game.Selection
 
 		private readonly HashSet<SelectableComponent>[] _selectionGroups;
 
-		public SelectionService(SelectableRaycastComponent selectableRaycastComponent, InputHandler inputHandler)
+		public SelectionService(RaycastHandler raycastHandler, InputHandler inputHandler)
 		{
 			// Initialize our HashSets
 			_selectedEntities = new HashSet<SelectableComponent>();
@@ -38,7 +38,7 @@ namespace Game.Selection
 			_inputHandler.OnSelectionRectChanged += GetEntitiesWithinSelectionRect;
 			_inputHandler.OnSelectionGroupSaved += SaveSelection;
 			_inputHandler.OnSelectionGroupRestored += RestoreSelection;
-			selectableRaycastComponent.OnSelectionPerformedEvent += Select;
+			raycastHandler.OnSelectionPerformedEvent += Select;
 
 			_camera = Camera.main;
 		}

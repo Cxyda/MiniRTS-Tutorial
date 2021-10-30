@@ -1,15 +1,20 @@
 using System;
-using Game.InputHandling;
+using Game.Selection;
 using UnityEngine;
 using Zenject;
 
-namespace Game.Selection
+namespace Game.InputHandling
 {
 	/// <summary>
 	/// This class casts rays from the camera through the mouse position to check whether we clicked on an object
 	/// with a <see cref="SelectableComponent"/> attached.
 	/// </summary>
-	public class SelectableRaycastComponent : IInitializable
+	public interface IRaycastHandler
+	{
+		event Action<SelectableComponent, bool, bool> OnSelectionPerformedEvent;
+	}
+
+	public class RaycastHandler : IRaycastHandler, IInitializable
 	{
 		/// <summary>
 		/// Event which gets invoked when a selectable entity has been clicked
