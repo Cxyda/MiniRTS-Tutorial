@@ -12,6 +12,7 @@ namespace Game.InputHandling
 	public interface IRaycastHandler
 	{
 		event Action<SelectableComponent, bool, bool> OnSelectionPerformedEvent;
+		bool TryGetHit(out RaycastHit hit, float distance = 1000f, LayerMask layerMask = default);
 	}
 
 	public class RaycastHandler : IRaycastHandler, IInitializable
@@ -23,10 +24,12 @@ namespace Game.InputHandling
 		/// Third parameter is whether a double click has been performed on that selectable or not
 		/// </summary>
 		public event Action<SelectableComponent, bool, bool> OnSelectionPerformedEvent;
-		
-		private Camera _camera;
+
 		[Inject] private InputHandler _inputHandler;
-		
+
+		private const int IgnoreRaycastLayer = 2;
+		private Camera _camera;
+
 		public void Initialize()
 		{
 			_inputHandler.OnLeftClickPerformed += OnLeftClickPerformed;
@@ -35,7 +38,12 @@ namespace Game.InputHandling
 		}
 		private void OnLeftClickPerformed()
 		{
-			if (TryGetSelectable(out var selectable))
+			if (!TryGetHit(out var hit))
+			{
+				return;
+			}
+
+			if (TryGetSelectable(hit, out var selectable))
 			{
 				// Invoke the event passing the selectable, whether the user presses the ModifySelection key and whether we want
 				// to select all all objects of the same type as well
@@ -49,19 +57,33 @@ namespace Game.InputHandling
 		}
 		private void OnDoubleLeftClickPerformed()
 		{
-			if (TryGetSelectable(out var selectable))
+			if (!TryGetHit(out var hit))
+			{
+				return;
+			}
+
+			if (TryGetSelectable(hit, out var selectable))
 			{
 				OnSelectionPerformedEvent?.Invoke(selectable, _inputHandler.ModifySelection, true);
 			}
 		}
-		private bool TryGetSelectable(out SelectableComponent selectable)
+
+		public bool TryGetHit(out RaycastHit hit, float distance = 1000f, LayerMask layerMask = default)
 		{
+			hit = default;
 			var ray = _camera.ScreenPointToRay(Input.mousePosition);
-			selectable = null;
-			if (!Physics.Raycast(ray, out var hit))
+			if (layerMask == default)
 			{
-				return false;
+				// default means bitmask of 0, so to raycast against everything except the "Ignore Raycast" layer inverse the bitmask.
+				layerMask = -IgnoreRaycastLayer;
 			}
+			return Physics.Raycast(ray, out hit, distance);
+		}
+
+		private bool TryGetSelectable(RaycastHit hit, out SelectableComponent selectable)
+		{
+			selectable = null;
+
 			// We did hit a Collider. Check if the gameObject has a SelectableComponent attached
 			selectable = hit.transform.GetComponent<SelectableComponent>();
 			return selectable != null;
