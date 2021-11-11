@@ -26,7 +26,7 @@ namespace Game.Selection
 
 		private readonly HashSet<SelectableComponent>[] _selectionGroups;
 
-		public SelectionService(RaycastHandler raycastHandler, InputHandler inputHandler)
+		public SelectionService(CameraRaycastHandler raycastHandler, InputHandler inputHandler)
 		{
 			// Initialize our HashSets
 			_selectedEntities = new HashSet<SelectableComponent>();

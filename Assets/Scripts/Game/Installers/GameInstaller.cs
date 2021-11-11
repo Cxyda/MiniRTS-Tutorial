@@ -13,7 +13,7 @@ namespace Game.Installers
 		{
 			Container.BindInterfacesAndSelfTo<InputHandler>().AsSingle();
 			Container.BindInterfacesAndSelfTo<SelectionService>().AsSingle().NonLazy();
-			Container.BindInterfacesAndSelfTo<RaycastHandler>().AsSingle().NonLazy();
+			Container.BindInterfacesAndSelfTo<CameraRaycastHandler>().AsSingle().NonLazy();
 		}
 	}
 }
