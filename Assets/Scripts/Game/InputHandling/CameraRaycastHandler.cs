@@ -9,13 +9,13 @@ namespace Game.InputHandling
 	/// This class casts rays from the camera through the mouse position to check whether we clicked on an object
 	/// with a <see cref="SelectableComponent"/> attached.
 	/// </summary>
-	public interface IRaycastHandler
+	public interface ICameraRaycastHandler
 	{
 		event Action<SelectableComponent, bool, bool> OnSelectionPerformedEvent;
 		bool TryGetHit(out RaycastHit hit, float distance = 1000f, LayerMask layerMask = default);
 	}
 
-	public class RaycastHandler : IRaycastHandler, IInitializable
+	public class CameraRaycastHandler : ICameraRaycastHandler, IInitializable
 	{
 		/// <summary>
 		/// Event which gets invoked when a selectable entity has been clicked
@@ -27,7 +27,7 @@ namespace Game.InputHandling
 
 		[Inject] private InputHandler _inputHandler;
 
-		private const int IgnoreRaycastLayer = 2;
+		private static readonly LayerMask _ignoreRaycastLayer = 4;
 		private Camera _camera;
 
 		public void Initialize()
@@ -74,10 +74,12 @@ namespace Game.InputHandling
 			var ray = _camera.ScreenPointToRay(Input.mousePosition);
 			if (layerMask == default)
 			{
-				// default means bitmask of 0, so to raycast against everything except the "Ignore Raycast" layer inverse the bitmask.
-				layerMask = -IgnoreRaycastLayer;
+				// default means bitmask of 0, so to raycast against everything except the "Ignore Raycast"
+				// we need to set the bitmask
+				layerMask = ~_ignoreRaycastLayer;
 			}
-			return Physics.Raycast(ray, out hit, distance);
+			// Ignore colliders which are marked as triggers
+			return Physics.Raycast(ray, out hit, distance, layerMask, QueryTriggerInteraction.Ignore);
 		}
 
 		private bool TryGetSelectable(RaycastHit hit, out SelectableComponent selectable)
