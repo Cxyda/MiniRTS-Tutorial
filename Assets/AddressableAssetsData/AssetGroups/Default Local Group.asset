@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 9a13e8c7754874af6988c31ec1ed61cd
+  m_SerializeEntries:
+  - m_GUID: 1d60422d4ad254b9889fd16287654496
+    m_Address: GameObjectBuildingB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bf5760b6c9fba42ca82ad217ea3e60a9
+    m_Address: GameObject/BuildingC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 973cf1cd5a0ff461db244d0e11bf8c37
+    m_Address: GameObject/DepositA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c1752630de5dd4293918b7780f1d9c0c
+    m_Address: GameObject/DepositB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 04c0b816ec0ef4b4d879e44fbbd391e2
+    m_Address: GameObject/DepositC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ba478488ae0d14e6ea0e8025328b17f0
+    m_Address: GameObject/UnitA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6daab070bd45d4341b5e1d3817e21f1d
+    m_Address: GameObject/UnitB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f29d0816b090d4c3d82acdf7ce98c55b
+    m_Address: GameObject/UnitC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d99eb8b02b7b44477b47d7761c934012
+    m_Address: GameObject/BuildingA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f6dd3a5c50fc24f4287ebcf8ce451cd4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: bb3f4230684e14157bbacb2c79db41a6, type: 2}
+    - {fileID: 11400000, guid: 854ade3a735eb45dab922f423b867363, type: 2}

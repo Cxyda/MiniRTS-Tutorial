@@ -13,7 +13,6 @@ namespace Game.Selection
 		// Will be assigned in the Unity Inspector
 		[SerializeField] private GameObject SelectionCircleGO;
 		[SerializeField] private bool _isSelected;
-		private bool _isVisible;
 
 		public bool IsSelected => _isSelected;
 
@@ -24,12 +23,10 @@ namespace Game.Selection
 		}
 		private void OnBecameVisible()
 		{
-			_isVisible = true;
 			_selectionService.RegisterSelectable(this);
 		}
 		private void OnBecameInvisible()
 		{
-			_isVisible = false;
 			// If the object is selected, don't unregister it, otherwise the SelectionService would lose it.
 			if (!_isSelected)
 			{

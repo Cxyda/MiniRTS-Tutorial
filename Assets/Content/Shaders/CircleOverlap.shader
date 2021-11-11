@@ -84,7 +84,6 @@ Shader "Custom/CircleOverlap" {
       
       fixed4 frag(VOut vout) : COLOR
       {
-        //return float4(1,1,1,1);
         float circle = distance(float2(0.5,0.5),vout.uv)*2;
         float outerCircle = step(1,circle);
         clip(-outerCircle);
