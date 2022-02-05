@@ -3,7 +3,10 @@ using Game.AssetLoading;
 using Game.Entity;
 using Game.InputHandling;
 using Game.Utility;
+using Simulation.Construction;
 using Simulation.Data;
+using Simulation.EntityTypeMapping;
+using Simulation.Location;
 using UnityEngine;
 using Zenject;
 
@@ -27,44 +30,49 @@ namespace Game.BuildMode
 		bool IsBuildModeActive { get; }
 	}
 
-	public class BuildModeService : IBuildModeService, ILateTickable
+	public class BuildModeService : IBuildModeService, ILateTickable, IDisposable
 	{
 		// use bit-shifting to set the layer mask to layer with ID 6 only, which is our Terrain layer
 		public const int TerrainLayerId = 6;
 
 		public event Func<EntityType, bool> OnPlacementConfirmedEvent;
 
-		private readonly ICameraRaycastHandler _cameraRaycastHandler;
-		private readonly IPrefabFactory _prefabFactory;
-		private readonly IAssetLoadService _assetLoadService;
+		[Inject] private ICameraRaycastHandler _cameraRaycastHandler;
+		[Inject] private IPrefabFactory _prefabFactory;
+		[Inject] private IAssetLoadService _assetLoadService;
+		[Inject] private IEntityTypeDataProvider _entityTypeDataProvider;
+		[Inject] private ILocationDataProvider _locationDataProvider;
 
 		private bool _isBuildModeActive;
 		private BuildingView _buildablePreview;
-		private int _defaultLayer;
 		private EntityType _buildingType;
+		private SimulationVector3 _lastValidPosition;
+
+		private readonly IInputHandler _inputHandler;
+		private readonly IConstructionService _constructionService;
 
 		public bool IsBuildModeActive => _isBuildModeActive;
 
-		public BuildModeService(ICameraRaycastHandler cameraRaycastHandler, IInputHandler inputHandler,
-			IPrefabFactory prefabFactory, IAssetLoadService assetLoadService)
+		public BuildModeService(IInputHandler inputHandler, IConstructionService constructionService)
 		{
-			_cameraRaycastHandler = cameraRaycastHandler;
-			_prefabFactory = prefabFactory;
-			_assetLoadService = assetLoadService;
+			_constructionService = constructionService;
+			_inputHandler = inputHandler;
 
-			inputHandler.OnLeftClickPerformed += ConfirmPlacement;
-			inputHandler.OnRightClickPerformed += CancelBuildMode;
+			_inputHandler.OnLeftClickPerformed += ConfirmPlacement;
+			_inputHandler.OnRightClickPerformed += CancelBuildMode;
+			
+			_constructionService.ConstructionStartedEvent += OnConstructionStarted;
 		}
 
 		public void LateTick()
 		{
 			// TODO: Remove this later when we have a BuildMenu in place
-			if (Input.GetKeyDown(KeyCode.B)) BuildObjectOfType(EntityType.BuildingA);
+			if (Input.GetKeyDown(KeyCode.B)) BuildObjectOfType(EntityType.BuildingC);
 
 			if(!_isBuildModeActive) return;
 			if (!TryGetTerrainHitPosition(out var position)) return;
-
-			_buildablePreview.SetPosition(position);
+			_lastValidPosition = new SimulationVector3(position.x, position.y, position.z);
+			_buildablePreview.SetPosition(_lastValidPosition);
 		}
 
 		public void BuildObjectOfType(EntityType entityType)
@@ -79,7 +87,6 @@ namespace Game.BuildMode
 				var buildingObject = _prefabFactory.CreateGameObject(gameObject);
 				_buildablePreview = buildingObject.GetComponent<BuildingView>();
 				_buildablePreview.StartBuildMode();
-				_defaultLayer = buildingObject.layer;
 				// Layer 2 means Unities "Ignore Raycast" layer to make sure we don't block our own ray-casting
 				SetLayerRecursively(buildingObject, 2);
 				_isBuildModeActive = true;
@@ -98,16 +105,37 @@ namespace Game.BuildMode
 
 			// Publish the event and check if any subscriber invalidate the construction
 			if (!DoAllSubscribersConfirm()) return;
-			_buildablePreview.ConfirmPlacement();
 
-			SetLayerRecursively(_buildablePreview.gameObject, _defaultLayer);
+			// TODO: create ghost preview of the building at location
+			_prefabFactory.ReleaseGameObject(_buildablePreview.gameObject);
+
+			// TODO: Command construction unit to location and start construction task
+			_constructionService.RequestStartConstruction(_buildingType, _lastValidPosition, 0);
+
 			Reset();
 		}
+		
+		private void OnConstructionStarted(EntityId constructedEntityId)
+		{
+			var entityView = _entityTypeDataProvider.Get(constructedEntityId);
+			_assetLoadService.LoadAsset<GameObject>(AssetType.GameObject, entityView, OnLoaded);
+			
+			void OnLoaded(GameObject gameObject)
+			{
+				var buildingObject = _prefabFactory.CreateGameObject(gameObject);
+				var buildingView = buildingObject.GetComponent<BuildingView>();
+				buildingView.EntityId = constructedEntityId;
+				buildingView.SetPosition(_locationDataProvider.GetLocation(constructedEntityId));
+				buildingView.ConfirmPlacement();
+			}
+		}
+
 		private void Reset()
 		{
 			_isBuildModeActive = false;
 			_buildablePreview = null;
 			_buildingType = EntityType.None;
+			_lastValidPosition = SimulationVector3.Zero;
 		}
 
 		private bool DoAllSubscribersConfirm()
@@ -152,6 +180,14 @@ namespace Game.BuildMode
 				if (null == child) continue;
 				SetLayerRecursively(child.gameObject, newLayer);
 			}
+		}
+
+		public void Dispose()
+		{
+			_inputHandler.OnLeftClickPerformed -= ConfirmPlacement;
+			_inputHandler.OnRightClickPerformed -= CancelBuildMode;
+
+			_constructionService.ConstructionStartedEvent -= OnConstructionStarted;
 		}
 	}
 }

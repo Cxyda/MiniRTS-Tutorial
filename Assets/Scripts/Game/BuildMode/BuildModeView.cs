@@ -22,7 +22,7 @@ namespace Game.BuildMode
 
 		private ushort _collisionCounter;
 		private bool _wasLastPositionValid;
-		private ClampedVector3 _lastPosition;
+		private SimulationVector3 _lastPosition;
 		private Vector3[] _basePoints;
 
 		// A temporary list which gets re-used to avoid garbage

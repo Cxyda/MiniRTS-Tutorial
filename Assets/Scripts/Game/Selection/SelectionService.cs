@@ -1,8 +1,13 @@
 // ReSharper disable ClassNeverInstantiated.Global
 
+using System;
 using System.Collections.Generic;
+using Game.Entity;
 using Game.InputHandling;
+using Simulation.Data;
+using Simulation.EntityTypeMapping;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Selection
 {
@@ -11,6 +16,8 @@ namespace Game.Selection
 	/// </summary>
 	public interface ISelectionService
 	{
+		event Action<IReadOnlyList<EntityId>> SelectionChangedEvent;
+
 		void Select(SelectableComponent selectable, bool addToSelection = false, bool selectAllOfSameType = false);
 
 		void RegisterSelectable(SelectableComponent selectableComponent);
@@ -19,6 +26,9 @@ namespace Game.Selection
 
 	public class SelectionService : ISelectionService
 	{
+		public event Action<IReadOnlyList<EntityId>> SelectionChangedEvent;
+
+		private readonly List<EntityId> _selectedEntityIds;
 		private readonly HashSet<SelectableComponent> _selectedEntities;
 		private readonly HashSet<SelectableComponent> _visibleSelectables;
 		private readonly InputHandler _inputHandler;
@@ -32,10 +42,12 @@ namespace Game.Selection
 			_selectedEntities = new HashSet<SelectableComponent>();
 			_visibleSelectables = new HashSet<SelectableComponent>();
 
+			_selectedEntityIds = new List<EntityId>();
+
 			_selectionGroups = new HashSet<SelectableComponent>[10];
 			_inputHandler = inputHandler;
 
-			_inputHandler.OnSelectionRectChanged += GetEntitiesWithinSelectionRect;
+			_inputHandler.OnSelectionRectChanged += SelectEntitiesWithinSelectionRect;
 			_inputHandler.OnSelectionGroupSaved += SaveSelection;
 			_inputHandler.OnSelectionGroupRestored += RestoreSelection;
 			raycastHandler.OnSelectionPerformedEvent += Select;
@@ -44,6 +56,12 @@ namespace Game.Selection
 		}
 		public void Select(SelectableComponent selectable, bool addToSelection = false, bool selectAllOfSameType = false)
 		{
+			SelectInternal(selectable, addToSelection, selectAllOfSameType);
+			SelectionChangedEvent?.Invoke(_selectedEntityIds);
+		}
+
+		private void SelectInternal(SelectableComponent selectable, bool addToSelection = false, bool selectAllOfSameType = false)
+		{
 			if (!addToSelection)
 			{
 				ClearSelection();
@@ -51,20 +69,24 @@ namespace Game.Selection
 
 			if (selectable == null) return;
 
+			var selectedEntityId = GetEntityIdOfSelectable(selectable);
 			// Handle the special case when we want to modify a selection and click on an already selected object.
 			if (addToSelection && _selectedEntities.Contains(selectable))
 			{
 				selectable.Select(false);
 				_selectedEntities.Remove(selectable);
+				_selectedEntityIds.Remove(selectedEntityId);
 			}
 			else
 			{
 				selectable.Select(true);
 				_selectedEntities.Add(selectable);
+				_selectedEntityIds.Add(selectedEntityId);
 			}
 			//TODO: Add functionality to select all objects of the same type on screen
 		}
-		private void GetEntitiesWithinSelectionRect(Rect? selectionRect)
+
+		private void SelectEntitiesWithinSelectionRect(Rect? selectionRect)
 		{
 			if (!_inputHandler.ModifySelection)
 			{
@@ -81,9 +103,10 @@ namespace Game.Selection
 				var screenPoint = GetScreenPoint(selectable);
 				if (selectionRect.Value.Contains(screenPoint))
 				{
-					Select(selectable, true, false);
+					SelectInternal(selectable, true, false);
 				}
 			}
+			SelectionChangedEvent?.Invoke(_selectedEntityIds);
 		}
 
 		private Vector3 GetScreenPoint(SelectableComponent selectable)
@@ -129,9 +152,11 @@ namespace Game.Selection
 
 			foreach (var selectedEntity in selection)
 			{
-				Select(selectedEntity, true);
+				SelectInternal(selectedEntity, true);
 			}
+			SelectionChangedEvent?.Invoke(_selectedEntityIds);
 		}
+
 		private void ClearSelection()
 		{
 			foreach (var selectedEntity in _selectedEntities)
@@ -139,7 +164,16 @@ namespace Game.Selection
 				selectedEntity.Select(false);
 			}
 			_selectedEntities.Clear();
+			_selectedEntityIds.Clear();
+
+			SelectionChangedEvent?.Invoke(_selectedEntityIds);
 		}
 
+		private EntityId GetEntityIdOfSelectable(Component selectableComponent)
+		{
+			// TODO: This is not optimal and should be refactored later
+			var entityView = selectableComponent.GetComponentInParent<EntityView>();
+			return entityView.EntityId;
+		}
 	}
 }

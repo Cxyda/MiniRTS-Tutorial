@@ -130,8 +130,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -145,6 +145,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4870005532869315804}
   - component: {fileID: -8978995645687148360}
+  - component: {fileID: -824632924797305196}
+  - component: {fileID: 68327351060322832}
   m_Layer: 0
   m_Name: BuildingC
   m_TagString: Untagged
@@ -181,8 +183,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c4b8a6abf47e88a894b8cb4abf678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityType: 3
   model: {fileID: 7729968316564344503}
+  _state: 0
   _buildModeView: {fileID: 756029373493477706}
+  _constructionSiteView: {fileID: -824632924797305196}
+--- !u!114 &-824632924797305196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2294021327156403305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f830b6939c904d87b1231a162150dd00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildingView: {fileID: -8978995645687148360}
+  _constructionSites:
+  - Progress: 0
+    Asset:
+      m_AssetGUID: cf47048f2388143e391225b93ab4f7c7
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - Progress: 40
+    Asset:
+      m_AssetGUID: a6692b4ff6cbb48b08d030605fc6571a
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - Progress: 80
+    Asset:
+      m_AssetGUID: ab270dc38f3cd4bb58f1fa279636b627
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+--- !u!114 &68327351060322832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2294021327156403305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57926ae9dbc24f8983ad024705dbd117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BuildingView: {fileID: -8978995645687148360}
+  SpawnPoints:
+  - {x: -1, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: -1}
 --- !u!1 &6343845203252124943
 GameObject:
   m_ObjectHideFlags: 0

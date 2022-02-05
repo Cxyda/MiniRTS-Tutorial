@@ -181,8 +181,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c4b8a6abf47e88a894b8cb4abf678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityType: 2
   model: {fileID: 7645355966827763897}
+  _state: 0
   _buildModeView: {fileID: 1495713876885631143}
+  _constructionSiteView: {fileID: 0}
 --- !u!1 &6343845203252124943
 GameObject:
   m_ObjectHideFlags: 0

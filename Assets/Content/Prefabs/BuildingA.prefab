@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4870005532869315804}
   - component: {fileID: 3324645786750007314}
+  - component: {fileID: 8622438246250541042}
   m_Layer: 0
   m_Name: BuildingA
   m_TagString: Untagged
@@ -46,8 +47,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c4b8a6abf47e88a894b8cb4abf678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityType: 1
   model: {fileID: 3841197072331866354}
+  _state: 0
   _buildModeView: {fileID: 5661190718429312155}
+  _constructionSiteView: {fileID: 8622438246250541042}
+--- !u!114 &8622438246250541042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2294021327156403305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f830b6939c904d87b1231a162150dd00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildingView: {fileID: 3324645786750007314}
+  _constructionSites:
+  - Progress: 0
+    Asset:
+      m_AssetGUID: cf47048f2388143e391225b93ab4f7c7
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - Progress: 50
+    Asset:
+      m_AssetGUID: a6692b4ff6cbb48b08d030605fc6571a
+      m_SubObjectName: 
+      m_SubObjectType: 
 --- !u!1 &3201389284439874844
 GameObject:
   m_ObjectHideFlags: 0

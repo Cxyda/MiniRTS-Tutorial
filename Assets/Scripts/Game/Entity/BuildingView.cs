@@ -1,42 +1,63 @@
 using Game.BuildMode;
+using Simulation.Data;
 using UnityEngine;
 
 namespace Game.Entity
 {
 	/// <summary>
-	/// This view component needs to be attached to all buildable objects
-	/// it serves as an interface between the player and the game services to control the state
-	/// of the GameWorld object
+	/// View class for all entities that can be build
 	/// </summary>
-	public class BuildingView : MonoBehaviour
+	public class BuildingView : EntityView
 	{
 		[SerializeField] protected GameObject model;
-		[SerializeField] private BuildModeView _buildModeView;
 
+		public enum BuildingState
+		{
+			Preview = 0,
+			UnderConstruction = 1,
+			Ready = 2
+		}
+
+		public BuildingState State => _state;
 		public bool IsPositionValid => _buildModeView.IsPlacementValid();
 
-		public void SetPosition(Vector3 position)
+		[SerializeField] private BuildingState _state;
+		
+		[SerializeField] private BuildModeView _buildModeView;
+		[SerializeField] private ConstructionSiteView _constructionSiteView;
+		
+		private SimulationVector3 _lastPosition;
+
+		public void StartBuildMode()
 		{
-			transform.position = position;
+			_state = BuildingState.Preview;
+			_buildModeView.ShowPreview();
+		}
+
+		public void SetPosition(SimulationVector3 position)
+		{
+			if (position == _lastPosition) return;
+
+			transform.position = position.Vector3;
+			
+			_lastPosition = position;
 			_buildModeView.CheckPlacement();
 		}
 
 		public void ConfirmPlacement()
 		{
 			model.SetActive(false);
+			_state = BuildingState.UnderConstruction;
 			_buildModeView.ConfirmPlacement();
 
-			ConstructionFinished();
+			if (_constructionSiteView != null) _constructionSiteView.StartConstruction();
+			else ConstructionFinished();
 		}
 
 		public void ConstructionFinished()
 		{
+			_state = BuildingState.Ready;
 			model.SetActive(true);
-		}
-
-		public void StartBuildMode()
-		{
-			_buildModeView.ShowPreview();
 		}
 	}
 }

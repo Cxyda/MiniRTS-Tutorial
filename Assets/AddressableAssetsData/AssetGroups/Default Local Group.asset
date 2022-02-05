@@ -71,6 +71,24 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: cf47048f2388143e391225b93ab4f7c7
+    m_Address: GameObject/ConstructionSite1-1x1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a6692b4ff6cbb48b08d030605fc6571a
+    m_Address: GameObject/ConstructionSite2-1x1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ab270dc38f3cd4bb58f1fa279636b627
+    m_Address: GameObject/ConstructionSite3-1x1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f6dd3a5c50fc24f4287ebcf8ce451cd4, type: 2}
   m_SchemaSet:
