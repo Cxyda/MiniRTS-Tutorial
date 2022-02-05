@@ -16,7 +16,7 @@ This project will use Extenject (formerly know as Zenject) for Dependency Inject
 - [x] v0.1 [#1 Basic project setup](https://github.com/Cxyda/MiniRTS-Tutorial/tree/0.1)
 - [x] v0.2 [#2 Selection and Input handling](https://github.com/Cxyda/MiniRTS-Tutorial/tree/0.2)
 - [x] v0.3 [#3 Building Placement](https://github.com/Cxyda/MiniRTS-Tutorial/tree/0.3)
-- [ ] \#4 Factories and Unit production
+- [x] v0.4 Construction Sites and Factories
 - [ ] \#5 UI and Asset Management
 - [ ] \#6 Units and Resource Gathering
 - [ ] \#7 Camera Controls
